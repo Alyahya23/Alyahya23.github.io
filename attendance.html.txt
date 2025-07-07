@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل الحضور والانصراف</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 50px; direction: rtl; }
+    button { font-size: 20px; margin: 10px; padding: 10px 20px; }
+    #msg { margin-top: 20px; color: green; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>نظام تسجيل الحضور والانصراف</h2>
+  <p id="welcome"></p>
+  <button onclick="submitData('حضور')">📥 تسجيل حضور</button>
+  <button onclick="submitData('انصراف')">📤 تسجيل انصراف</button>
+  <p id="msg"></p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("name");
+    const display = name === "sultan" ? "سلطان" : name === "abdulmalik" ? "عبدالملك" : "مستخدم غير معروف";
+    document.getElementById("welcome").innerText = "مرحباً، " + display;
+
+    function submitData(type) {
+      const url = "https://script.google.com/macros/s/AKfycbypK5RBB6oWTdXNmplQHUHPRkxU0AGf7MrnwvAHURhuJLq5Q-s8L71dGc2yA9PIg4N4mw/exec";
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("type", type);
+      fetch(url, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById("msg").innerText = "✅ " + msg;
+        document.getElementById("msg").style.color = "green";
+      })
+      .catch(err => {
+        document.getElementById("msg").innerText = "❌ حدث خطأ: " + err;
+        document.getElementById("msg").style.color = "red";
+      });
+    }
+  </script>
+</body>
+</html>
